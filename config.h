@@ -4,27 +4,7 @@
  / _` \ \ /\ / / '_ ` _ \   _____   / __/ _ \| '_ \| |_| |/ _` | | '_ \ 
 | (_| |\ V  V /| | | | | | |_____| | (_| (_) | | | |  _| | (_| |_| | | |
  \__,_| \_/\_/ |_| |_| |_|          \___\___/|_| |_|_| |_|\__, (_)_| |_|
-                                                          |___/         
-                                                          	
-patches applied (incl. some slight changes):
 
-dwm-bartoggle-keybinds-6.4.diff ----- toggle pieces of the bar
-dwm-bulkill-20231029-9f88553.diff ----- kill all except current; kill all in tag
-dwm-colorbar-6.3.diff ----- fine control over statusbar colors
-dwm-fixmultimon-6.4.diff ----- pretty much a bug fix
-dwm-focusfullscreen-20211121-95e7342.diff ----- proper fullscreen
-dwm-focusmaster-return-6.2.diff ----- switch to master from anywhere in the stack
-dwm-focusmonmouse-6.2.diff ----- move mouse when you switch monitors via keybind
-dwm-hide_vacant_tags-6.4.diff ----- hide tags with no windows
-dwm-preventfocusshift-20240831-6.5.diff ----- automatically exit fullscreen when a window is spawned
-dwm-restartsig-20180523-6.2.diff ----- refresh dwm after recompile, without quitting
-dwm-spawntag-6.2.diff ----- spawn an application when tag is middle-clicked
-dwm-stacker-6.2.diff ----- more utilities to manage the stack
-dwm-statuscmd-20210405-67d76bd.diff ----- execute cmds when statusbar is clicked (used for dwmblocks)
-dwm-sticky-6.5.diff ----- make a window follow from tag to tag
-dwm-swallow-6.3.diff ----- terminal swallows launched programs
-dwm-vanitygaps-6.2.diff ----- gaps are functional: your eye is less inclined to drift while working.
-dwm-xrdb-6.4.diff - xresource database colors
 */
 
 #include <X11/XF86keysym.h>
@@ -54,15 +34,7 @@ static const int showfloating       = 0;        /* 0 means no floating indicator
 static int topbar                   = 1;        /* 0 means bottom bar */
 
 static char dmenufont[]             = "JetBrainsMono Nerd Font:size=12";
-static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=10"  };
-
-/* default colors used if xrdb is not loaded */
-/*static char normbgcolor[]           = "#2e3440";
-static char normbordercolor[]       = "#4c566a";
-static char normfgcolor[]           = "#d8dee9";
-static char selfgcolor[]            = "#eceff4";
-static char selbordercolor[]        = "#a3be8c";
-static char selbgcolor[]            = "#b48ead";*/
+static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=15"  };
 
 static char normbgcolor[]           = "#1f1f1f"; // dark grey
 static char normbordercolor[]       = "#60686C"; // light-grey
@@ -85,7 +57,7 @@ static char *colors[][3] = {
 
 
 /* tagging 				       0    1    2    3    4    5    6    7    8	*/
-static const char *tags[] = { "", "", "󱖏", "󰈙", "󰵅", "", "", "?", "" };
+static const char *tags[] = { "", "", "", "󰈙", "󰍦", "", "", "", "" };
 // static const char *tags[] = { "", "", "", "󰈙", "󰊻", "󰴢", "", "", "" };
 //                          { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "󰎳", "󰎶", "󰎹", "󰎼" };
 
@@ -316,12 +288,15 @@ static const Key keys[] = {
 
 
 /* other bindings */
-	{ MODKEY|ShiftMask,		XK_Home,			spawn,       SHCMD("mute-speaker.sh") },
-	{ 0,					XF86XK_AudioPlay,   spawn,       SHCMD("playerctl play-pause --player=spotify") },
-	{ 0,					XF86XK_AudioNext,   spawn,       SHCMD("playerctl next --player=spotify") },
-	{ 0,					XF86XK_AudioPrev,   spawn,       SHCMD("playerctl previous --player=spotify") },
-	{ ControlMask|Mod1Mask,	XK_Delete,     		spawn,       SHCMD("slock") },
-	{ MODKEY,				XK_o,	     		spawn,       SHCMD("picom-opacity.sh") },
+	{ 0,					XF86XK_AudioPlay,			spawn,       SHCMD("playerctl play-pause --player=spotify") },
+	{ 0,					XF86XK_AudioNext,   		spawn,       SHCMD("playerctl next --player=spotify") },
+	{ 0,					XF86XK_AudioPrev,   		spawn,       SHCMD("playerctl previous --player=spotify") },
+	{ 0,					XF86XK_AudioMute,  			spawn,       SHCMD("wpctl set-mute @DEFAULT_SINK@ toggle") },
+	{ 0,					XF86XK_AudioRaiseVolume,	spawn,       SHCMD("wpctl set-volume @DEFAULT_SINK@ 10%+") },
+	{ 0,					XF86XK_AudioLowerVolume,	spawn,       SHCMD("wpctl set-volume @DEFAULT_SINK@ 10%-") },
+	{ 0,					XF86XK_MonBrightnessUp,		spawn,       SHCMD("brightnessctl s +10%") },
+	{ 0,					XF86XK_MonBrightnessDown,	spawn,       SHCMD("brightnessctl s 10%-") },
+	{ ControlMask|Mod1Mask,	XK_Delete,     				spawn,       SHCMD("slock") },
 };
 
 
