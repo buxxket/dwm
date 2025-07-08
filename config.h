@@ -17,7 +17,7 @@ static const int systrayiconsize = 0;            /* 0: inherit bar height */
 static int showsystray = 1;                      /* 0 means no systray */
 
 /* appearance */
-static unsigned int borderpx        = 1;        /* border pixel of windows */
+static unsigned int borderpx        = 2;        /* border pixel of windows */
 static unsigned int snap            = 32;       /* snap pixel */
 static const unsigned int gappih    = 20;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 20;       /* vert inner gap between windows */
@@ -57,8 +57,7 @@ static char *colors[][3] = {
 
 
 /* tagging 				       0    1    2    3    4    5    6    7    8	*/
-static const char *tags[] = { "", "", "", "󰈙", "󰍦", "", "", "", "" };
-// static const char *tags[] = { "", "", "", "󰈙", "󰊻", "󰴢", "", "", "" };
+static const char *tags[] = { "", "", "󱖏", "󰈙", "󰵅", "", "", "?", "" };// static const char *tags[] = { "", "", "", "󰈙", "󰊻", "󰴢", "", "", "" };
 //                          { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "󰎳", "󰎶", "󰎹", "󰎼" };
 
 
