@@ -104,6 +104,7 @@ static const Rule rules[] = {
 	{ "matplotlib",		       			NULL,       	NULL,       0,            	1,				1,           -1 },
 	{ "kitty",		       				"floatkitty",   NULL,       0,            	1,				1,           -1 },
 	{ "dolphin",		       			NULL,			NULL,       0,            	1,				1,           -1 },
+	{ "polkit-kde-authentication-agent-1",		       			NULL,			NULL,       0,            	1,				1,           -1 },
 	{ "Thunar",		       				NULL,			NULL,       0,            	1,				1,           -1 },
 	{ "firefox",         				NULL,       	NULL,       1 << 1,       	0,				0,           -1 },
 	{ "Spotify", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
