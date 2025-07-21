@@ -57,8 +57,8 @@ static char *colors[][3] = {
 
 
 /* tagging 				       0    1    2    3    4    5    6    7    8	*/
-static const char *tags[] = { "", "", "󱖏", "󰈙", "󰵅", "", "", "?", "" };// static const char *tags[] = { "", "", "", "󰈙", "󰊻", "󰴢", "", "", "" };
-//                          { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "󰎳", "󰎶", "󰎹", "󰎼" };
+static const char *tags[] = { "", "", "󰝚", "󰈙", "", "", "", "󰵅", "" };
+// static const char *tags[] = { "", "", "", "󰈙", "󰊻", "󰴢", "", "", "" };
 
 
 static const Rule rules[] = {
@@ -66,33 +66,44 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class            				instance    	title       tags mask		is centered		isfloating   monitor */
-	{ "kitty",           				NULL,       	"btop",     0,				1,				1,           -1 },
-	{ "Gimp",           				NULL,       	NULL,       0,				1,				1,           -1 },
-	{ "st",           					NULL,       	NULL,       0,            	1,				1,           -1 },
-	{ "pwvucontrol",       				NULL,       	NULL,       0,            	1,				1,           -1 },
-	{ "copyq",		       				NULL,       	NULL,       0,            	1,				1,           -1 },
-	{ "matplotlib",		       			NULL,       	NULL,       0,            	1,				1,           -1 },
-	{ "kitty",		       				"floatkitty",   NULL,       0,            	1,				1,           -1 },
-	{ "dolphin",		       			NULL,			NULL,       0,            	1,				1,           -1 },
-	{ "Thunar",		       				NULL,			NULL,       0,            	1,				1,           -1 },
-	{ "firefox",         				NULL,       	NULL,       1 << 1,       	0,				0,           -1 },
-	{ "Spotify", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
-	{ "vlc", 							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
-	{ "obs-studio",						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
-	{ NULL,								NULL,       	"Grayjay",  1 << 2,       	1,				1,           -1 },
-	{ "libreoffice",					NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
-	{ "Libreoffice-calc",				NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
-	{ "teams-for-linux", 				NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
-	{ "outlook-for-linux", 				NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
-	{ "Slack",           				NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
-	{ "discord",         				NULL,       	NULL,       1 << 7,       	1,				1,           -1 },	
-	{ "Signal", 	     				NULL,       	NULL,       1 << 7,       	1,				1,           -1 },
-	{ "steam", 		     				NULL,       	NULL,       1 << 8,			1,				1,           -1 },
-	{ "steam_app_381210", 				NULL, 			NULL, 		1 << 8, 		0,				1,			 -1 },
-	{ "virt-manager",      				NULL,       	NULL,       1 << 8,       	0,				1,           -1 },
-	{ "Virt-manager",      				NULL,       	NULL,       1 << 8,       	0,				1,           -1 },
-//  { "gamescope",				    	NULL,       	NULL,       1 << 8,       0,				1,           -1 },
+	/* class            					instance    	title       tags mask		is centered		isfloating   monitor */
+	{ "kitty",           					NULL,       	"btop",     0,				1,				1,           -1 },
+	{ "Gimp",           					NULL,       	NULL,       0,				1,				1,           -1 },
+	{ "galculator",           				NULL,       	NULL,       0,				1,				1,           -1 },
+	{ "Galculator",           				NULL,       	NULL,       0,				1,				1,           -1 },
+	{ "st",           						NULL,       	NULL,       0,            	1,				1,           -1 },
+	{ "pwvucontrol",       					NULL,       	NULL,       0,            	1,				1,           -1 },
+	{ "copyq",		       					NULL,       	NULL,       0,            	1,				1,           -1 },
+	{ "matplotlib",		       				NULL,       	NULL,       0,            	1,				1,           -1 },
+	{ "kitty",		       					"floatkitty",   NULL,       0,            	1,				1,           -1 },
+	{ "dolphin",		       				NULL,			NULL,       0,            	1,				1,           -1 },
+	{ "polkit-kde-authentication-agent-1",	NULL,			NULL,       0,            	1,				1,           -1 },
+	{ "Thunar",		       					NULL,			NULL,       0,            	1,				1,           -1 },
+	{ "firefox",         					NULL,       	NULL,       1 << 1,       	0,				0,           -1 },
+	{ "Spotify", 							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
+	{ "ncmpcpp", 							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
+	{ "QMPDClient", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
+	{ "vlc", 								NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
+	{ "Strawberry", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
+	{ "obs-studio",							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
+	{ NULL,									NULL,       	"Grayjay",  1 << 2,       	1,				1,           -1 },
+	{ "libreoffice",						NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
+	{ "Libreoffice-calc",					NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
+	{ "teams-for-linux", 					NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
+	{ "outlook-for-linux", 					NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
+	{ "Slack",           					NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
+	{ "virt-manager",	      				NULL,       	NULL,       1 << 5,       	0,				1,           -1 },
+	{ "Virt-manager",   	   				NULL,       	NULL,       1 << 5,       	0,				1,           -1 },
+	{ "org.remmina.Remmina",   	   			NULL,       	NULL,       1 << 5,       	0,				1,           -1 },
+	{ "org.remmina.Remmina",   	   			NULL,       	"latitude", 1 << 5,       	1,				1,           -1 },
+	{ "kitty",		       					"tunkitty", 	NULL,       1 << 6,        	0,				0,           -1 },
+	{ "discord",         					NULL,       	NULL,       1 << 7,       	1,				1,           -1 },	
+	{ "Signal", 	     					NULL,       	NULL,       1 << 7,       	1,				1,           -1 },
+	{ "Caprine", 	     					NULL,       	NULL,       1 << 7,       	1,				1,           -1 },
+	{ "whatsapp-desktop-client",			NULL,       	NULL,       1 << 7,       	1,				1,           -1 },
+	{ "steam", 		     					NULL,       	NULL,       1 << 8,			1,				1,           -1 },
+	{ "steam_app_381210", 					NULL, 			NULL, 		1 << 8, 		0,				1,			 -1 },
+//  { "gamescope",				    		NULL,       	NULL,       1 << 8,       0,				1,           -1 },
 };
 
 #include "vanitygaps.c"
@@ -144,12 +155,12 @@ static const Layout layouts[] = { /* alt glyphs: 󱡗 󱏋 */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
-static const char *screenshotcmd[] = { "/bin/sh", "-c", "maim -s | xclip -selection clipboard -t image/png", NULL };
+// static const char *screenshotcmd[] = { "/bin/sh", "-c", "maim -s | xclip -selection clipboard -t image/png", NULL };
 static const char *roficmd[]  = { "rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL };
 static const char *kittycmd[]  = { "kitty", NULL };
 static const char *kittyfloatcmd[]  = { "kitty", "--class", "floatkitty", NULL };
-static const char *flameshotcmd[]  = { "flameshot gui", NULL };
-static const char *copyqcmd[]  = { "copyq menu", NULL };
+// static const char *flameshotcmd[]  = { "flameshot gui", NULL };
+// static const char *copyqcmd[]  = { "copyq menu", NULL };
 
 static const Arg tagexec[] = { /* spawn application when tag is middle-clicked */
 	{ .v = termcmd }, /* 1 */
@@ -305,14 +316,14 @@ static const Button buttons[] = {
 	/* click                event mask           button          function        argument */
 // #ifndef __OpenBSD__
 	// { ClkWinTitle,          0,			Button2,	zoom,           {0} },
-	{ ClkStatusText,        0,			Button1,	sigstatusbar,   {.i = 1} },
-	{ ClkStatusText,        0,			Button2,	sigstatusbar,   {.i = 2} },
-	{ ClkStatusText,        0,			Button3,	sigstatusbar,   {.i = 3} },
-	{ ClkStatusText,        0,			Button4,	sigstatusbar,   {.i = 4} },
-	{ ClkStatusText,        0,			Button5,	sigstatusbar,   {.i = 5} },
-	{ ClkStatusText,		ShiftMask,	Button1,	sigstatusbar,	{.i = 6} },
-	{ ClkStatusText,        ShiftMask,	Button4,	sigstatusbar,   {.i = 7} },
-	{ ClkStatusText,        ShiftMask,	Button5,	sigstatusbar,   {.i = 8} },
+	{ ClkStatusText,        0,				Button1,	sigstatusbar,   {.i = 1} },
+	{ ClkStatusText,        0,				Button2,	sigstatusbar,   {.i = 2} },
+	{ ClkStatusText,        0,				Button3,	sigstatusbar,   {.i = 3} },
+	{ ClkStatusText,        0,				Button4,	sigstatusbar,   {.i = 4} },
+	{ ClkStatusText,        0,				Button5,	sigstatusbar,   {.i = 5} },
+	{ ClkStatusText,		ShiftMask,		Button1,	sigstatusbar,	{.i = 6} },
+	{ ClkStatusText,        ControlMask,	Button1,	sigstatusbar,   {.i = 7} },
+	{ ClkStatusText,        ShiftMask,		Button5,	sigstatusbar,   {.i = 8} },
 // #endif
 
 	{ ClkStatusText,        ShiftMask,	Button3,	spawn,          SHCMD("kitty micro ~/suckless/dwmblocks/config.h") },

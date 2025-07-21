@@ -2148,6 +2148,11 @@ void setup(void) {
     pertag_nmasters[i] = nmaster;
     pertag_layouts[i] = &layouts[0];
   }
+
+  /* set tag6 tile and 2 master */
+  pertag_layouts[6] = &layouts[1];
+  pertag_nmasters[6] = 2;
+  
   pertag_cur = 0;
   /* supporting window for NetWMCheck */
   wmcheckwin = XCreateSimpleWindow(
