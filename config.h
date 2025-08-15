@@ -83,11 +83,13 @@ static const Rule rules[] = {
 	{ "Spotify", 							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "ncmpcpp", 							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "QMPDClient", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
+	{ "com.github.th_ch.youtube_music", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "vlc", 								NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "Strawberry", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "obs-studio",							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ NULL,									NULL,       	"Grayjay",  1 << 2,       	1,				1,           -1 },
 	{ "libreoffice",						NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
+	{ "okular",								NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
 	{ "Libreoffice-calc",					NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
 	{ "teams-for-linux", 					NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
 	{ "outlook-for-linux", 					NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
@@ -306,7 +308,7 @@ static const Key keys[] = {
 	{ 0,					XF86XK_AudioLowerVolume,	spawn,       SHCMD("wpctl set-volume @DEFAULT_SINK@ 10%-") },
 	{ 0,					XF86XK_MonBrightnessUp,		spawn,       SHCMD("brightnessctl s +10%") },
 	{ 0,					XF86XK_MonBrightnessDown,	spawn,       SHCMD("brightnessctl s 10%-") },
-	{ ControlMask|Mod1Mask,	XK_Delete,     				spawn,       SHCMD("slock") },
+	{ ControlMask|Mod1Mask,	XK_Delete,     				spawn,       SHCMD("slock-dpms") },
 };
 
 
