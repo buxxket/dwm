@@ -1,0 +1,15 @@
+drw.c
+drw.h
+drw.o
+dwm
+dwm.1
+dwm.o
+dwm.o.bak
+dwm.png
+LICENSE
+Makefile
+README.md
+swallow
+util.c
+util.h
+util.o
