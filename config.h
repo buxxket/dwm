@@ -83,7 +83,7 @@ static const Rule rules[] = {
 	{ "Spotify", 							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "ncmpcpp", 							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "QMPDClient", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
-	{ "com.github.th_ch.youtube_music", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
+	{ "com.github.th_ch.youtube_music", 	NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "vlc", 								NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "Strawberry", 						NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
 	{ "obs-studio",							NULL,       	NULL,       1 << 2,       	1,				1,           -1 },
