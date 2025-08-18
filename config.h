@@ -34,7 +34,7 @@ static const int showfloating       = 0;        /* 0 means no floating indicator
 static int topbar                   = 1;        /* 0 means bottom bar */
 
 static char dmenufont[]             = "JetBrainsMono Nerd Font:size=12";
-static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=10"  };
+#include "fonts.h" // set font in font.h
 
 static char normbgcolor[]           = "#1f1f1f"; // dark grey
 static char normbordercolor[]       = "#60686C"; // light-grey
