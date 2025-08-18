@@ -13,3 +13,4 @@ swallow
 util.c
 util.h
 util.o
+fonts.h
