@@ -40,3 +40,6 @@ sudo make clean install
 * [vanitygaps](https://dwm.suckless.org/patches/vanitygaps/)
 * [xrdb](https://dwm.suckless.org/patches/xrdb/)
 * [attach-aside](https://dwm.suckless.org/patches/attachaside/)
+* [pertag](https://dwm.suckless.org/patches/pertag/)
+* [center](https://dwm.suckless.org/patches/center/)
+* [systray](https://dwm.suckless.org/patches/systray/)
