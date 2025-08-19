@@ -3,21 +3,21 @@
 
 Run the following in your terminal
 
-```
+```sh
 git clone https://github.com/buxxket/dwm
 cd dwm
 ```
 
 In the `dwm` folder, create file `fonts.h` with:
 
-```
-# Adjust to your font
+```c
+// Adjust to your font
 static const char *fonts[] = { "JetBrainsMono Nerd Font:size=10" };
 ```
 
 Then run 
 
-```
+```sh
 sudo make clean install
 ```
 
