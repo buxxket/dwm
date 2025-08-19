@@ -1,34 +1,28 @@
 /*
-bread's dwm build
+     _                                               __ _         _     
+  __| |_      ___ __ ___             ___ ___  _ __  / _(_) __ _  | |__  
+ / _` \ \ /\ / / '_ ` _ \   _____   / __/ _ \| '_ \| |_| |/ _` | | '_ \ 
+| (_| |\ V  V /| | | | | | |_____| | (_| (_) | | | |  _| | (_| |_| | | |
+ \__,_| \_/\_/ |_| |_| |_|          \___\___/|_| |_|_| |_|\__, (_)_| |_|
 
-patches applied (incl. some slight changes):
-
-dwm-bartoggle-keybinds-6.4.diff ----- toggle pieces of the bar
-dwm-bulkill-20231029-9f88553.diff ----- kill all except current; kill all in tag
-dwm-colorbar-6.3.diff ----- fine control over statusbar colors
-dwm-fixmultimon-6.4.diff ----- pretty much a bug fix
-dwm-focusfullscreen-20211121-95e7342.diff ----- proper fullscreen
-dwm-focusmaster-return-6.2.diff ----- switch to master from anywhere in the stack
-dwm-focusmonmouse-6.2.diff ----- move mouse when you switch monitors via keybind
-dwm-hide_vacant_tags-6.4.diff ----- hide tags with no windows
-dwm-preventfocusshift-20240831-6.5.diff ----- automatically exit fullscreen when a window is spawned
-dwm-restartsig-20180523-6.2.diff ----- refresh dwm after recompile, without quitting
-dwm-spawntag-6.2.diff ----- spawn an application when tag is middle-clicked
-dwm-stacker-6.2.diff ----- more utilities to manage the stack
-dwm-statuscmd-20210405-67d76bd.diff ----- execute cmds when statusbar is clicked (used for dwmblocks)
-dwm-sticky-6.5.diff ----- make a window follow from tag to tag
-dwm-swallow-6.3.diff ----- terminal swallows launched programs
-dwm-vanitygaps-6.2.diff ----- gaps are functional: your eye is less inclined to drift while working.
-dwm-xrdb-6.4.diff - xresource database colors
 */
 
+#include <X11/XF86keysym.h>
+
+/* --- SYSTRAY PATCH CONFIG --- */
+static const unsigned int systraypinning = 0;    /* 0: systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayonleft = 0;     /* 0: systray in the right corner, >0: systray on left of status text */
+static const unsigned int systrayspacing = 3;    /* systray spacing */
+static const int systrayiconsize = 0;            /* 0: inherit bar height */
+static int showsystray = 1;                      /* 0 means no systray */
+
 /* appearance */
-static unsigned int borderpx        = 1;        /* border pixel of windows */
+static unsigned int borderpx        = 2;        /* border pixel of windows */
 static unsigned int snap            = 32;       /* snap pixel */
 static const unsigned int gappih    = 20;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 20;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 20;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 30;       /* vert outer gap between windows and screen edge */
+static const unsigned int gappov    = 20;       /* vert outer gap between windows and screen edge */
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static int showbar                  = 1;        /* 0 means no bar */
@@ -39,16 +33,15 @@ static const int showstatus         = 1;        /* 0 means no status bar */
 static const int showfloating       = 0;        /* 0 means no floating indicator */
 static int topbar                   = 1;        /* 0 means bottom bar */
 
-static char dmenufont[]             = "monospace:size=12";
-static const char *fonts[]          = { "monospace:size=12", "Hack Nerd Font Mono:size=12", "NotoColorEmoji:pixelsize=12:antialias=true:autohint=true"  };
+static char dmenufont[]             = "JetBrainsMono Nerd Font:size=12";
+#include "fonts.h" // set font in font.h
 
-/* default colors used if xrdb is not loaded */
-static char normbgcolor[]           = "#2e3440";
-static char normbordercolor[]       = "#4c566a";
-static char normfgcolor[]           = "#d8dee9";
-static char selfgcolor[]            = "#eceff4";
-static char selbordercolor[]        = "#a3be8c";
-static char selbgcolor[]            = "#b48ead";
+static char normbgcolor[]           = "#1f1f1f"; // dark grey
+static char normbordercolor[]       = "#60686C"; // light-grey
+static char normfgcolor[]           = "#E0E0E0"; // off-white //"#E5B566"; // gold
+static char selfgcolor[]            = "#7DD5CF"; // blue
+static char selbordercolor[]        = "#7E8D50"; // green
+static char selbgcolor[]            = "#AE4142"; // red
 
 static char *colors[][3] = {
        /*               fg           bg           border   */
@@ -63,9 +56,9 @@ static char *colors[][3] = {
 };
 
 
-/* tagging */
-static const char *tags[] = { "", "", "", "󰙯", "󱇤", "", "󱘶", "" };
-// static const char *tags[] = { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "󰎳", "󰎶", "󰎹", "󰎼" };
+/* tagging 				       0    1    2    3    4    5    6    7    8	*/
+static const char *tags[] = { "", "", "󰝚", "󰈙", "", "", "", "󰵅", "" };
+// static const char *tags[] = { "", "", "", "󰈙", "󰊻", "󰴢", "", "", "" };
 
 
 static const Rule rules[] = {
@@ -73,16 +66,51 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
-	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
-	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
+	/* class            					instance    	title       tags mask		is centered		isfloating   monitor */
+	{ "kitty",           					NULL,       	"btop",     0,				1,				1,           -1 },
+	{ "Gimp",           					NULL,       	NULL,       0,				1,				1,           -1 },
+	{ "galculator",           				NULL,       	NULL,       0,				1,				1,           -1 },
+	{ "Galculator",           				NULL,       	NULL,       0,				1,				1,           -1 },
+	{ "st",           						NULL,       	NULL,       0,            	1,				1,           -1 },
+	{ "pwvucontrol",       					NULL,       	NULL,       0,            	1,				1,           -1 },
+	{ "copyq",		       					NULL,       	NULL,       0,            	1,				1,           -1 },
+	{ "matplotlib",		       				NULL,       	NULL,       0,            	1,				1,           -1 },
+	{ "kitty",		       					"floatkitty",   NULL,       0,            	1,				1,           -1 },
+	{ "dolphin",		       				NULL,			NULL,       0,            	1,				1,           -1 },
+	{ "polkit-kde-authentication-agent-1",	NULL,			NULL,       0,            	1,				1,           -1 },
+	{ "Thunar",		       					NULL,			NULL,       0,            	1,				1,           -1 },
+	{ "firefox",         					NULL,       	NULL,       1 << 1,       	0,				0,           -1 },
+	{ "ncmpcpp", 							NULL,       	NULL,       1 << 2,       	1,				0,           -1 },
+	{ "QMPDClient", 						NULL,       	NULL,       1 << 2,       	1,				0,           -1 },
+	{ "com.github.th_ch.youtube_music", 	NULL,       	NULL,       1 << 2,       	1,				0,           -1 },
+	{ "vlc", 								NULL,       	NULL,       1 << 2,       	1,				0,           -1 },
+	{ "obs-studio",							NULL,       	NULL,       1 << 2,       	1,				0,           -1 },
+	{ NULL,									NULL,       	"Grayjay",  1 << 2,       	1,				1,           -1 },
+	{ "libreoffice",						NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
+	{ "okular",								NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
+	{ "Libreoffice-calc",					NULL,       	NULL,       1 << 3,       	1,				1,           -1 },
+	{ "teams-for-linux", 					NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
+	{ "outlook-for-linux", 					NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
+	{ "Slack",           					NULL,       	NULL,       1 << 4,       	0,				0,           -1 },
+	{ "virt-manager",	      				NULL,       	NULL,       1 << 5,       	0,				1,           -1 },
+	{ "Virt-manager",   	   				NULL,       	NULL,       1 << 5,       	0,				1,           -1 },
+	{ "org.remmina.Remmina",   	   			NULL,       	NULL,       1 << 5,       	0,				1,           -1 },
+	{ "org.remmina.Remmina",   	   			NULL,       	"latitude", 1 << 5,       	1,				1,           -1 },
+	{ "kitty",		       					"tunkitty", 	NULL,       1 << 6,        	0,				0,           -1 },
+	{ "discord",         					NULL,       	NULL,       1 << 7,       	1,				1,           -1 },	
+	{ "Signal", 	     					NULL,       	NULL,       1 << 7,       	1,				1,           -1 },
+	{ "Caprine", 	     					NULL,       	NULL,       1 << 7,       	1,				1,           -1 },
+	{ "whatsapp-desktop-client",			NULL,       	NULL,       1 << 7,       	1,				1,           -1 },
+	{ "steam", 		     					NULL,       	NULL,       1 << 8,			1,				1,           -1 },
+	{ "steam_app_381210", 					NULL, 			NULL, 		1 << 8, 		0,				1,			 -1 },
+//  { "gamescope",				    		NULL,       	NULL,       1 << 8,       0,				1,           -1 },
 };
 
 #include "vanitygaps.c"
 
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.5; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen window */
@@ -90,11 +118,11 @@ static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = { /* alt glyphs: 󱡗 󱏋 */
 	/* symbol     arrange function */
-	{ "󰝘",      tile },    /* first entry is default */
-	{ "󰇥",      NULL },    /* no layout function means floating behavior */
-	{ "",      monocle },
-	{ "󰷷",      spiral },
-	{ "",      dwindle },
+	{ "[ 󱙷 ]",      spiral },
+	{ "[  ]",      tile },    /* first entry is default */
+	{ "[ 󰇥 ]",      NULL },    /* no layout function means floating behavior */
+	{ "[  ]",      monocle },
+	{ "[ > ]",      dwindle },
 };
 
 
@@ -121,13 +149,18 @@ static const Layout layouts[] = { /* alt glyphs: 󱡗 󱏋 */
 #define GTKCMD(cmd) { .v = (const char*[]){ "/usr/bin/gtk-launch", cmd, NULL } }
 
 #define STATUSBAR "dwmblocks"
-#define BROWSER "qutebrowser"
+#define BROWSER "firefox"
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
+// static const char *screenshotcmd[] = { "/bin/sh", "-c", "maim -s | xclip -selection clipboard -t image/png", NULL };
+static const char *roficmd[]  = { "rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL };
 static const char *kittycmd[]  = { "kitty", NULL };
+static const char *kittyfloatcmd[]  = { "kitty", "--class", "floatkitty", NULL };
+// static const char *flameshotcmd[]  = { "flameshot gui", NULL };
+// static const char *copyqcmd[]  = { "copyq menu", NULL };
 
 static const Arg tagexec[] = { /* spawn application when tag is middle-clicked */
 	{ .v = termcmd }, /* 1 */
@@ -144,9 +177,13 @@ static const Arg tagexec[] = { /* spawn application when tag is middle-clicked *
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_d,      spawn,          {.v = roficmd } },
+	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = kittyfloatcmd } },
+	{ MODKEY,                       XK_Return, spawn,          {.v = kittycmd } },
+//	{ MODKEY|ShiftMask,             XK_s, 	   spawn,          {.v = flameshotcmd } },
+	{ MODKEY|ShiftMask,             XK_s, 	   spawn,          SHCMD("flameshot gui") },
+	{ MODKEY,                       XK_v,	   spawn,          SHCMD("copyq menu") },
+
 	STACKKEYS(MODKEY,                          focus)
 	STACKKEYS(MODKEY|ShiftMask,                push)
 	{ MODKEY|ShiftMask,             XK_i,      incnmaster,     {.i = +1 } }, /* increase # of master windows */
@@ -167,17 +204,23 @@ static const Key keys[] = {
     /* { MODKEY|ShiftMask|ControlMask,  XK_q,	killclient,     {.ui = 2} }, */
 	{ MODKEY|ControlMask,			XK_backslash, xrdb,			{.v = NULL } }, /* refresh xrdb; run this when setting new colors */
 
-
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,						XK_f,	   togglefullscreen, {0} }, /* focus fullscreen patch */
-	{ MODKEY|ShiftMask,				XK_m,      setlayout,      {.v = &layouts[2]} }, /* monacle */
-	{ MODKEY,						XK_s,      setlayout,      {.v = &layouts[3]} }, /* spiral */
+	/* layouts 
+	{ "[ 󱙷 ]",      spiral },
+	{ "[  ]",      tile },    
+	{ "[ 󰇥 ]",      NULL },    
+	{ "[  ]",      monocle },
+	{ "[ > ]",      dwindle }, */
+	{ MODKEY,                       XK_s,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,						XK_t,	   setlayout,	   {.v = &layouts[1]} }, /* focus fullscreen patch */
+	{ MODKEY|ShiftMask,				XK_f,	   togglefullscreen, {0} }, /* focus fullscreen patch */
+	{ MODKEY,						XK_f,      setlayout,      {.v = &layouts[2]} }, /* monacle */
+	{ MODKEY|ShiftMask,				XK_m,      setlayout,      {.v = &layouts[3]} }, /* spiral */
 	{ MODKEY|ShiftMask,				XK_t,      setlayout,      {.v = &layouts[4]} }, /* dwindle */
 	{ MODKEY|ControlMask,			XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,				XK_space,  togglefloating, {0} },
 	{ MODKEY,						XK_space,  zoom,           {0} },
 	{ MODKEY|ControlMask,           XK_space,  focusmaster,    {0} },
-	{ MODKEY|ShiftMask,             XK_s,      togglesticky,   {0} },
+	{ MODKEY|ControlMask|ShiftMask, XK_s,      togglesticky,   {0} },
 
 
 /* multi-monitor control */
@@ -224,6 +267,8 @@ static const Key keys[] = {
     { MODKEY|ControlMask,			XK_e,      togglebarcolor, {0} }, /* swaps fg/bg for tag+win */
 	{ MODKEY|ControlMask,			XK_r,      togglebarlt,    {0} },
 	{ MODKEY|ControlMask,			XK_f,      togglebarfloat, {0} },
+	{ MODKEY|ControlMask,           XK_b,      togglebar,      {0} },
+
 
 
 /* application bindings */
@@ -233,12 +278,12 @@ static const Key keys[] = {
 	{ MODKEY,			XK_n,          spawn,      {.v = (const char*[]){ "st", "-e", "nvim", NULL } } },
 	{ MODKEY|ShiftMask,	XK_h,          spawn,      {.v = (const char*[]){ "st", "-e", "htop", NULL } } },
 	{ MODKEY,			XK_p,          spawn,      {.v = (const char*[]){ "darktable", NULL } } },
+	{ MODKEY,			XK_e,          spawn,      {.v = (const char*[]){ "dolphin", NULL } } },
+	
 
 
 /* script launch bindings */
 	{ MODKEY|ShiftMask,		XK_n,      spawn,       {.v = (const char*[]){ "dmenunotes", NULL } } },
-	{ MODKEY,				XK_v,      spawn,       {.v = (const char*[]){ "cliphist", "sel", NULL } } },
-	{ MODKEY,				XK_c,      spawn,       {.v = (const char*[]){ "cliphist", "add", NULL } } },
 	{ MODKEY|ShiftMask,		XK_a,      spawn,       {.v = (const char*[]){ "dmenuvids", NULL } } },
 	{ MODKEY|ControlMask,	XK_a,      spawn,       {.v = (const char*[]){ "dmenuaudioswitch", NULL } } },
 	{ MODKEY|ShiftMask,		XK_d,      spawn,       {.v = (const char*[]){ "rip", NULL } } },
@@ -253,16 +298,15 @@ static const Key keys[] = {
 
 
 /* other bindings */
-	{ MODKEY,				XK_F12,    spawn,       SHCMD("playerctl -p termusic next") },
-	{ MODKEY,				XK_F11,    spawn,       SHCMD("playerctl -p termusic play-pause") },
-	{ MODKEY|ShiftMask,		XK_F11,    spawn,       SHCMD("playerctl play-pause") },
-	{ MODKEY,				XK_F10,    spawn,       SHCMD("playerctl -p termusic previous") },
-	{ MODKEY|ShiftMask,		XK_F8,     spawn,       SHCMD("slock systemctl suspend -i") },
-	{ MODKEY,				XK_F8,     spawn,       SHCMD("slock") },
-	{ MODKEY,				XK_F7,     spawn,       SHCMD("status-timer") },
-	{ MODKEY|ShiftMask,		XK_F7,     spawn,       SHCMD("status-timer cleanup") },
-	{ MODKEY,				XK_F6,     spawn,       SHCMD("amixer -D pulse sset Master 5%+") },
-	{ MODKEY,				XK_F5,     spawn,       SHCMD("amixer -D pulse sset Master 5%-") },
+	{ 0,					XF86XK_AudioPlay,			spawn,       SHCMD("playerctl play-pause --player=spotify") },
+	{ 0,					XF86XK_AudioNext,   		spawn,       SHCMD("playerctl next --player=spotify") },
+	{ 0,					XF86XK_AudioPrev,   		spawn,       SHCMD("playerctl previous --player=spotify") },
+	{ 0,					XF86XK_AudioMute,  			spawn,       SHCMD("wpctl set-mute @DEFAULT_SINK@ toggle") },
+	{ 0,					XF86XK_AudioRaiseVolume,	spawn,       SHCMD("wpctl set-volume @DEFAULT_SINK@ 10%+") },
+	{ 0,					XF86XK_AudioLowerVolume,	spawn,       SHCMD("wpctl set-volume @DEFAULT_SINK@ 10%-") },
+	{ 0,					XF86XK_MonBrightnessUp,		spawn,       SHCMD("brightnessctl s +10%") },
+	{ 0,					XF86XK_MonBrightnessDown,	spawn,       SHCMD("brightnessctl s 10%-") },
+	{ ControlMask|Mod1Mask,	XK_Delete,     				spawn,       SHCMD("slock-dpms") },
 };
 
 
@@ -270,17 +314,19 @@ static const Key keys[] = {
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static const Button buttons[] = {
 	/* click                event mask           button          function        argument */
-#ifndef __OpenBSD__
-	{ ClkWinTitle,          0,			Button2,	zoom,           {0} },
-	{ ClkStatusText,        0,			Button1,	sigstatusbar,   {.i = 1} },
-	{ ClkStatusText,        0,			Button2,	sigstatusbar,   {.i = 2} },
-	{ ClkStatusText,        0,			Button3,	sigstatusbar,   {.i = 3} },
-	{ ClkStatusText,        0,			Button4,	sigstatusbar,   {.i = 4} },
-	{ ClkStatusText,        0,			Button5,	sigstatusbar,   {.i = 5} },
-	{ ClkStatusText,		ShiftMask,	Button1,	sigstatusbar,	{.i = 6} },
-#endif
+// #ifndef __OpenBSD__
+	// { ClkWinTitle,          0,			Button2,	zoom,           {0} },
+	{ ClkStatusText,        0,				Button1,	sigstatusbar,   {.i = 1} },
+	{ ClkStatusText,        0,				Button2,	sigstatusbar,   {.i = 2} },
+	{ ClkStatusText,        0,				Button3,	sigstatusbar,   {.i = 3} },
+	{ ClkStatusText,        0,				Button4,	sigstatusbar,   {.i = 4} },
+	{ ClkStatusText,        0,				Button5,	sigstatusbar,   {.i = 5} },
+	{ ClkStatusText,		ShiftMask,		Button1,	sigstatusbar,	{.i = 6} },
+	{ ClkStatusText,        ControlMask,	Button1,	sigstatusbar,   {.i = 7} },
+	{ ClkStatusText,        ShiftMask,		Button5,	sigstatusbar,   {.i = 8} },
+// #endif
 
-	{ ClkStatusText,        ShiftMask,	Button3,	spawn,          SHCMD("st -e nvim ~/.local/src/dwmblocks/blocks.h") },
+	{ ClkStatusText,        ShiftMask,	Button3,	spawn,          SHCMD("kitty micro ~/suckless/dwmblocks/config.h") },
 	{ ClkClientWin,			MODKEY,		Button1,	movemouse,      {0} }, /* left click */
 	{ ClkClientWin,			MODKEY,		Button2,	defaultgaps,    {0} }, /* middle click */
 	{ ClkClientWin,			MODKEY,		Button3,	resizemouse,    {0} }, /* right click */
