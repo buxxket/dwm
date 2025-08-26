@@ -55,6 +55,7 @@ static char *colors[][3] = {
 		[SchemeInfoNorm]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* info M unselected */
 };
 
+// #include "/home/adam/.cache/wal/colors-wal-dwm.h"
 
 /* tagging 				       0    1    2    3    4    5    6    7    8	*/
 static const char *tags[] = { "", "", "󰝚", "󰈙", "", "", "", "󰵅", "" };
