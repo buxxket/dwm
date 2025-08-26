@@ -11,3 +11,6 @@ fonts.h
 *~
 *.swp
 *.swo
+
+# Backups
+*.bak
