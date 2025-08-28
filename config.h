@@ -9,12 +9,12 @@
 
 #include <X11/XF86keysym.h>
 
-/* --- SYSTRAY PATCH CONFIG --- */
-static const unsigned int systraypinning = 0;    /* 0: systray follows selected monitor, >0: pin systray to monitor X */
-static const unsigned int systrayonleft = 0;     /* 0: systray in the right corner, >0: systray on left of status text */
-static const unsigned int systrayspacing = 3;    /* systray spacing */
-static const int systrayiconsize = 0;            /* 0: inherit bar height */
-static int showsystray = 1;                      /* 0 means no systray */
+ /* --- SYSTRAY PATCH CONFIG --- */
+ static const unsigned int systraypinning = 0;    /* 0: systray follows selected monitor, >0: pin systray to monitor X */
+ static const unsigned int systrayonleft = 0;     /* 0: systray in the right corner, >0: systray on left of status text */
+ static const unsigned int systrayspacing = 3;    /* systray spacing */
+ static const int systrayiconsize = 0;            /* 0: inherit bar height */
+ static int showsystray = 1;                      /* 0 means no systray */
 
 /* appearance */
 static unsigned int borderpx        = 2;        /* border pixel of windows */
@@ -32,6 +32,8 @@ static const int showlayout         = 1;        /* 0 means no layout indicator *
 static const int showstatus         = 1;        /* 0 means no status bar */
 static const int showfloating       = 0;        /* 0 means no floating indicator */
 static int topbar                   = 1;        /* 0 means bottom bar */
+static unsigned int baralpha        = 0x33;	/* hexa-decimal 0x00-0xFF */
+static unsigned int borderalpha     = OPAQUE;
 
 static char dmenufont[]             = "JetBrainsMono Nerd Font:size=12";
 #include "fonts.h" // set font in font.h
