@@ -291,14 +291,14 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,		XK_a,      spawn,       {.v = (const char*[]){ "dmenuvids", NULL } } },
 	{ MODKEY|ControlMask,	XK_a,      spawn,       {.v = (const char*[]){ "dmenuaudioswitch", NULL } } },
 	{ MODKEY|ShiftMask,		XK_d,      spawn,       {.v = (const char*[]){ "rip", NULL } } },
-	{ MODKEY,				XK_r,      spawn,       {.v = (const char*[]){ "rec", NULL } } },
+	{ MODKEY,							XK_r,      spawn,       {.v = (const char*[]){ "rec", NULL } } },
 	{ MODKEY|ShiftMask,		XK_grave,  spawn,       {.v = (const char*[]){ "define", NULL } } },
-	{ MODKEY|ShiftMask,		XK_w,      spawn,       {.v = (const char*[]){ "wallpapermenu", NULL } } },
-	{ MODKEY,				XK_F1,     spawn,       SHCMD("screenshot") },
+	{ MODKEY|ShiftMask,		XK_w,      spawn,       {.v = (const char*[]){ "change-wallpaper", NULL } } },
+	{ MODKEY,							XK_F1,     spawn,       SHCMD("screenshot") },
 	{ MODKEY|ShiftMask,		XK_F1,     spawn,       SHCMD("screenshot color") },
-	{ MODKEY,				XK_F2,     spawn,       {.v = (const char*[]){ "vb", NULL } } },
+	{ MODKEY,							XK_F2,     spawn,       {.v = (const char*[]){ "vb", NULL } } },
 	{ MODKEY|ShiftMask,		XK_F2,     spawn,       {.v = (const char*[]){ "dmenutemp", NULL } } },
-	{ MODKEY,				XK_F3,     spawn,       {.v = (const char*[]){ "phototransfer", NULL } } },
+	{ MODKEY,							XK_F3,     spawn,       {.v = (const char*[]){ "phototransfer", NULL } } },
 
 
 /* other bindings */
