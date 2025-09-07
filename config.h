@@ -302,15 +302,15 @@ static const Key keys[] = {
 
 
 /* other bindings */
-	{ 0,					XF86XK_AudioPlay,			spawn,       SHCMD("playerctl play-pause --player=spotify") },
-	{ 0,					XF86XK_AudioNext,   		spawn,       SHCMD("playerctl next --player=spotify") },
-	{ 0,					XF86XK_AudioPrev,   		spawn,       SHCMD("playerctl previous --player=spotify") },
-	{ 0,					XF86XK_AudioMute,  			spawn,       SHCMD("wpctl set-mute @DEFAULT_SINK@ toggle") },
-	{ 0,					XF86XK_AudioRaiseVolume,	spawn,       SHCMD("wpctl set-volume @DEFAULT_SINK@ 10%+") },
-	{ 0,					XF86XK_AudioLowerVolume,	spawn,       SHCMD("wpctl set-volume @DEFAULT_SINK@ 10%-") },
+	{ 0,					XF86XK_AudioPlay,					spawn,       SHCMD("playerctl play-pause --player=spotify") },
+	{ 0,					XF86XK_AudioNext,   			spawn,       SHCMD("playerctl next --player=spotify") },
+	{ 0,					XF86XK_AudioPrev,   			spawn,       SHCMD("playerctl previous --player=spotify") },
+	{ 0,					XF86XK_AudioMute,  				spawn,       SHCMD("change-volume-cli mute") },
+	{ 0,					XF86XK_AudioRaiseVolume,	spawn,       SHCMD("change-volume-cli up") },
+	{ 0,					XF86XK_AudioLowerVolume,	spawn,       SHCMD("change-volume-cli down") },
 	{ 0,					XF86XK_MonBrightnessUp,		spawn,       SHCMD("brightnessctl s +10%") },
 	{ 0,					XF86XK_MonBrightnessDown,	spawn,       SHCMD("brightnessctl s 10%-") },
-	{ ControlMask|Mod1Mask,	XK_Delete,     				spawn,       SHCMD("slock-dpms") },
+	{ ControlMask|Mod1Mask,	XK_Delete,     	spawn,       SHCMD("slock-dpms") },
 };
 
 
