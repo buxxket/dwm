@@ -97,6 +97,7 @@ static const Rule rules[] = {
 	{"Virt-manager",                       NULL,          NULL,        1<<5,       0,            1,            -1},
 	{"org.remmina.Remmina",                NULL,          NULL,        1<<5,       0,            1,            -1},
 	{"org.remmina.Remmina",                NULL,          "latitude",  1<<5,       0,            0,            -1},
+	{"krdc",															 NULL,          NULL,				 1<<5,       0,            0,            -1},
 	{"kitty",                              "tunkitty",    NULL,        1<<6,       0,            0,            -1},
 	{"discord",                            NULL,          NULL,        1<<7,       0,            0,            -1},
 	{"vesktop",                            NULL,          NULL,        1<<7,       0,            0,            -1},
