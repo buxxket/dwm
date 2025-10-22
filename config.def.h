@@ -1,7 +1,7 @@
 /*
-     _                                               __ _         _     
-  __| |_      ___ __ ___             ___ ___  _ __  / _(_) __ _  | |__  
- / _` \ \ /\ / / '_ ` _ \   _____   / __/ _ \| '_ \| |_| |/ _` | | '_ \ 
+     _                                               __ _         _
+  __| |_      ___ __ ___             ___ ___  _ __  / _(_) __ _  | |__
+ / _` \ \ /\ / / '_ ` _ \   _____   / __/ _ \| '_ \| |_| |/ _` | | '_ \
 | (_| |\ V  V /| | | | | | |_____| | (_| (_) | | | |  _| | (_| |_| | | |
  \__,_| \_/\_/ |_| |_| |_|          \___\___/|_| |_|_| |_|\__, (_)_| |_|
 
@@ -60,8 +60,7 @@ static char *colors[][3] = {
 // #include "/home/adam/.cache/wal/colors-wal-dwm.h"
 
 /* tagging 				       0    1    2    3    4    5    6    7    8	*/
-static const char *tags[] = { "", "", "󰝚", "󰈙", "", "", "", "󰵅", "" };
-// static const char *tags[] = { "", "", "", "󰈙", "󰊻", "󰴢", "", "", "" };
+static const char *tags[] = { "", "", "", "󰈙", "󰝚", "", "", "󰵅", "" };
 
 static const Rule rules[] = {
     /* xprop(1):
@@ -82,18 +81,18 @@ static const Rule rules[] = {
 	{"polkit-kde-authentication-agent-1",  NULL,          NULL,        0,          1,            1,            -1},
 	{"Thunar",                             NULL,          NULL,        0,          1,            1,            -1},
 	{"firefox",                            NULL,          NULL,        1<<1,       0,            0,            -1},
-	{"ncmpcpp",                            NULL,          NULL,        1<<2,       1,            0,            -1},
-	{"QMPDClient",                         NULL,          NULL,        1<<2,       1,            0,            -1},
-	{"com.github.th_ch.youtube_music",     NULL,          NULL,        1<<2,       1,            0,            -1},
-	{"vlc",                                NULL,          NULL,        1<<2,       1,            0,            -1},
-	{"obs-studio",                         NULL,          NULL,        1<<2,       1,            0,            -1},
-	{NULL,                                 NULL,          "Grayjay",   1<<2,       1,            1,            -1},
+	{"teams-for-linux",                    NULL,          NULL,        1<<2,       0,            0,            -1},
+	{"outlook-for-linux",                  NULL,          NULL,        1<<2,       0,            0,             1},
+	{"Slack",                              NULL,          NULL,        1<<2,       0,            0,            -1},
 	{"okular",                             NULL,          NULL,        1<<3,       0,            0,            -1},
 	{"libreoffice",                        NULL,          NULL,        1<<3,       0,            0,            -1},
 	{"Libreoffice-calc",                   NULL,          NULL,        1<<3,       0,            0,            -1},
-	{"teams-for-linux",                    NULL,          NULL,        1<<4,       0,            0,            -1},
-	{"outlook-for-linux",                  NULL,          NULL,        1<<4,       0,            0,             1},
-	{"Slack",                              NULL,          NULL,        1<<4,       0,            0,            -1},
+	{"ncmpcpp",                            NULL,          NULL,        1<<4,       1,            0,            -1},
+	{"QMPDClient",                         NULL,          NULL,        1<<4,       1,            0,            -1},
+	{"com.github.th_ch.youtube_music",     NULL,          NULL,        1<<4,       1,            0,            -1},
+	{"vlc",                                NULL,          NULL,        1<<4,       1,            0,            -1},
+	{"obs-studio",                         NULL,          NULL,        1<<4,       1,            0,            -1},
+	{NULL,                                 NULL,          "Grayjay",   1<<4,       1,            1,            -1},
 	{"Virt-manager",                       NULL,          NULL,        1<<5,       0,            1,            -1},
 	{"org.remmina.Remmina",                NULL,          NULL,        1<<5,       0,            1,            -1},
 	{"org.remmina.Remmina",                NULL,          "latitude",  1<<5,       0,            0,            -1},
