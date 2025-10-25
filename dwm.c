@@ -96,7 +96,7 @@ static Systray systray;
 #define HEIGHT(X) ((X)->h + 2 * (X)->bw)
 #define TAGMASK ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X) (drw_fontset_getwidth(drw, (X)) + lrpad)
-#define OPAQUE                  0xffU
+#define OPAQUE 0xffU
 
 #define XRDB_LOAD_COLOR(R, V)                                                  \
   if (XrmGetResource(xrdb, R, NULL, &type, &value) == True) {                  \
@@ -190,7 +190,8 @@ struct Client {     /* a window that dwm is managing */
   int bw, oldbw;     /* current and prev border widths */
   unsigned int tags; /* bitmasks for which tags window is visible on */
   int isfixed, iscentered, isfloating, isurgent, neverfocus, oldstate,
-      isfullscreen, issticky, isterminal, noswallow; /* window states */
+      isfullscreen, issticky, isterminal, noswallow,
+      isalwaysontop;  /* window states */
   pid_t pid;          /* pid of application in window - useful for swallowing */
   Client *next;       /* next client, in the linked list of all clients */
   Client *snext;      /* next in the STACK */
@@ -343,6 +344,7 @@ static void togglebarlt(const Arg *arg);
 static void togglebarstatus(const Arg *arg);
 static void togglebarfloat(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglealwaysontop(const Arg *arg);
 static void togglefullscreen(const Arg *arg);
 static void togglesticky(const Arg *arg);
 static void toggletag(const Arg *arg);
@@ -432,7 +434,7 @@ static xcb_connection_t *xcon;
 /* configuration, allows nested code to access above variables */
 #include "config.h"
 
-#define NUMTAGS (sizeof(tags)/sizeof(*tags))
+#define NUMTAGS (sizeof(tags) / sizeof(*tags))
 
 static float pertag_mfacts[NUMTAGS];
 static int pertag_nmasters[NUMTAGS];
@@ -1164,8 +1166,11 @@ void drawbar(Monitor *m) {
     if (m->sel && selmon->showtitle) {
       drw_setscheme(drw, scheme[m == selmon ? SchemeInfoSel : SchemeInfoNorm]);
       drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
-      if (m->sel->isfloating && selmon->showfloating)
+      if (m->sel->isfloating && selmon->showfloating) {
         drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
+        if (m->sel->isalwaysontop)
+          drw_rect(drw, x + boxs, bh - boxw, boxw, boxw, 0, 0);
+      }
     } else {
       drw_setscheme(drw, scheme[SchemeInfoNorm]);
       drw_rect(drw, x, 0, w, bh, 1, 1);
@@ -1902,6 +1907,15 @@ void restack(Monitor *m) {
     return;
   if (m->sel->isfloating || !m->lt[m->sellt]->arrange)
     XRaiseWindow(dpy, m->sel->win);
+  /* raise the aot window */
+  for (Monitor *m_search = mons; m_search; m_search = m_search->next) {
+    for (c = m_search->clients; c; c = c->next) {
+      if (c->isalwaysontop) {
+        XRaiseWindow(dpy, c->win);
+        break;
+      }
+    }
+  }
   if (m->lt[m->sellt]->arrange) {
     wc.stack_mode = Below;
     wc.sibling = m->barwin;
@@ -2101,8 +2115,8 @@ void setup(void) {
   root = RootWindow(dpy, screen); /* dwm attaches to the root window so it can
                                      recieve global events */
   xinitvisual();
-	drw = drw_create(dpy, screen, root, sw, sh, visual, depth, cmap);
-	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
+  drw = drw_create(dpy, screen, root, sw, sh, visual, depth, cmap);
+  if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
     die("no fonts could be loaded.");
   lrpad = drw->fonts->h; /* sets lrpad to the height of the font, for correct
                             spacing in bar */
@@ -2139,11 +2153,12 @@ void setup(void) {
   cursor[CurResize] = drw_cur_create(drw, XC_sizing);
   cursor[CurMove] = drw_cur_create(drw, XC_fleur);
   /* init appearance */
-  scheme = ecalloc(LENGTH(colors), sizeof(Clr *)); /* allocates memory to set up colorschemes */
+  scheme = ecalloc(LENGTH(colors),
+                   sizeof(Clr *)); /* allocates memory to set up colorschemes */
   unsigned int alphas[] = {borderalpha, baralpha, OPAQUE};
-	for (i = 0; i < LENGTH(colors); i++)
+  for (i = 0; i < LENGTH(colors); i++)
     scheme[i] = drw_scm_create(drw, (const char **)colors[i], alphas, 3);
- /* init bars */
+  /* init bars */
   updatebars();   /* creates a bar window for each monitor */
   updatestatus(); /* renders the status text */
   updatesystray();
@@ -2158,7 +2173,7 @@ void setup(void) {
   /* set tag6 tile and 2 master */
   pertag_layouts[6] = &layouts[1];
   pertag_nmasters[6] = 2;
-  
+
   pertag_cur = 0;
   /* supporting window for NetWMCheck */
   wmcheckwin = XCreateSimpleWindow(
@@ -2440,6 +2455,29 @@ void togglefloating(const Arg *arg) {
   if (selmon->sel->isfloating)
     resize(selmon->sel, selmon->sel->x, selmon->sel->y, selmon->sel->w,
            selmon->sel->h, 0);
+  else
+    selmon->sel->isalwaysontop = 0; /* disabled, turn this off too */
+  arrange(selmon);
+}
+
+void togglealwaysontop(const Arg *arg) {
+  if (!selmon->sel)
+    return;
+  if (selmon->sel->isfullscreen)
+    return;
+
+  if (selmon->sel->isalwaysontop) {
+    selmon->sel->isalwaysontop = 0;
+  } else {
+    /* disable others */
+    for (Monitor *m = mons; m; m = m->next)
+      for (Client *c = m->clients; c; c = c->next)
+        c->isalwaysontop = 0;
+
+    /* turn on, make it float too */
+    selmon->sel->isfloating = 1;
+    selmon->sel->isalwaysontop = 1;
+  }
   arrange(selmon);
 }
 
@@ -2551,23 +2589,23 @@ void unmapnotify(XEvent *e) {
 
 void updatebars(void) {
   Monitor *m;
-  XSetWindowAttributes wa = {
-		.override_redirect = True,
-		.background_pixel = 0,
-		.border_pixel = 0,
-		.colormap = cmap,
-		.event_mask = ButtonPressMask | ExposureMask
-	};
+  XSetWindowAttributes wa = {.override_redirect = True,
+                             .background_pixel = 0,
+                             .border_pixel = 0,
+                             .colormap = cmap,
+                             .event_mask = ButtonPressMask | ExposureMask};
   XClassHint ch = {"dwm", "dwm"};
   for (m = mons; m; m = m->next) {
     if (m->barwin)
       continue;
-		m->barwin = XCreateWindow(dpy, root, m->wx, m->by, m->ww, bh, 0, depth,
-			    InputOutput, visual,
-			    CWOverrideRedirect|CWBackPixel|CWBorderPixel|CWColormap|CWEventMask, &wa);
-		XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
-   		XMapRaised(dpy, m->barwin);
-   		XSetClassHint(dpy, m->barwin, &ch);
+    m->barwin = XCreateWindow(dpy, root, m->wx, m->by, m->ww, bh, 0, depth,
+                              InputOutput, visual,
+                              CWOverrideRedirect | CWBackPixel | CWBorderPixel |
+                                  CWColormap | CWEventMask,
+                              &wa);
+    XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
+    XMapRaised(dpy, m->barwin);
+    XSetClassHint(dpy, m->barwin, &ch);
   }
 }
 
@@ -3007,76 +3045,71 @@ int xerrorstart(Display *dpy, XErrorEvent *ee) {
   return -1;
 }
 
-void
-xinitvisual()
-{
-       XVisualInfo *infos;
-       XRenderPictFormat *fmt;
-       int nitems;
-       int i;
+void xinitvisual() {
+  XVisualInfo *infos;
+  XRenderPictFormat *fmt;
+  int nitems;
+  int i;
 
-       XVisualInfo tpl = {
-               .screen = screen,
-               .depth = 32,
-               .class = TrueColor
-       };
-       long masks = VisualScreenMask | VisualDepthMask | VisualClassMask;
+  XVisualInfo tpl = {.screen = screen, .depth = 32, .class = TrueColor};
+  long masks = VisualScreenMask | VisualDepthMask | VisualClassMask;
 
-       infos = XGetVisualInfo(dpy, masks, &tpl, &nitems);
-       visual = NULL;
-       for(i = 0; i < nitems; i ++) {
-               fmt = XRenderFindVisualFormat(dpy, infos[i].visual);
-               if (fmt->type == PictTypeDirect && fmt->direct.alphaMask) {
-                       visual = infos[i].visual;
-                       depth = infos[i].depth;
-                       cmap = XCreateColormap(dpy, root, visual, AllocNone);
-                       useargb = 1;
-                       break;
-               }
-       }
+  infos = XGetVisualInfo(dpy, masks, &tpl, &nitems);
+  visual = NULL;
+  for (i = 0; i < nitems; i++) {
+    fmt = XRenderFindVisualFormat(dpy, infos[i].visual);
+    if (fmt->type == PictTypeDirect && fmt->direct.alphaMask) {
+      visual = infos[i].visual;
+      depth = infos[i].depth;
+      cmap = XCreateColormap(dpy, root, visual, AllocNone);
+      useargb = 1;
+      break;
+    }
+  }
 
-       XFree(infos);
+  XFree(infos);
 
-       if (! visual) {
-               visual = DefaultVisual(dpy, screen);
-               depth = DefaultDepth(dpy, screen);
-               cmap = DefaultColormap(dpy, screen);
-       }
+  if (!visual) {
+    visual = DefaultVisual(dpy, screen);
+    depth = DefaultDepth(dpy, screen);
+    cmap = DefaultColormap(dpy, screen);
+  }
 }
 
 void xrdb(const Arg *arg) { /* load xresource database colors */
   loadxrdb();
   int i;
-	unsigned int alphas[] = {borderalpha, baralpha, OPAQUE};
-	for (i = 0; i < LENGTH(colors); i++)
+  unsigned int alphas[] = {borderalpha, baralpha, OPAQUE};
+  for (i = 0; i < LENGTH(colors); i++)
     scheme[i] = drw_scm_create(drw, (const char **)colors[i], alphas, 3);
-	focus(NULL);
+  focus(NULL);
   arrange(NULL);
 }
 
 void zoom(const Arg *arg) {
-    Client *c = selmon->sel;
-    Client *at;
+  Client *c = selmon->sel;
+  Client *at;
 
-    if (!selmon->lt[selmon->sellt]->arrange || !c || c->isfloating)
-        return;
-    if (c == nexttiled(selmon->clients)) {
-        if (!(c = nexttiled(c->next)))
-            return;
-    }
-    at = nexttiled(selmon->clients);
-    if (!at || c == at)
-        return;
-    detach(c);
-    c->next = at;
-    if (selmon->clients == at)
-        selmon->clients = c;
-    else {
-        Client *prev;
-        for (prev = selmon->clients; prev->next != at; prev = prev->next);
-        prev->next = c;
-    }
-    arrange(selmon);
+  if (!selmon->lt[selmon->sellt]->arrange || !c || c->isfloating)
+    return;
+  if (c == nexttiled(selmon->clients)) {
+    if (!(c = nexttiled(c->next)))
+      return;
+  }
+  at = nexttiled(selmon->clients);
+  if (!at || c == at)
+    return;
+  detach(c);
+  c->next = at;
+  if (selmon->clients == at)
+    selmon->clients = c;
+  else {
+    Client *prev;
+    for (prev = selmon->clients; prev->next != at; prev = prev->next)
+      ;
+    prev->next = c;
+  }
+  arrange(selmon);
 }
 
 int main(int argc, char *argv[]) {
